@@ -1,11 +1,22 @@
-CC=gcc
-CFLAGS=-Wall -O2
+CC = gcc
+CFLAGS = -Wall -pthread -Iringbuffer -Icapture -Iprocessor -Iplayback
 
-all: bin/realtime_audio
+SRC = main.c \
+      ringbuffer/ringbuffer.c \
+      capture/capture.c \
+      processor/processor.c \
+      playback/playback.c
 
-bin/realtime_audio: src/main.c
-	mkdir -p bin
-	$(CC) $(CFLAGS) src/main.c -o bin/realtime_audio
+OBJ = $(SRC:.c=.o)
+TARGET = app
+
+all: $(TARGET)
+
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf bin
+	rm -f $(OBJ) $(TARGET)

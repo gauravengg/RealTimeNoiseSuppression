@@ -8,13 +8,14 @@ void *processor_thread(void *args) {
     void *audio_data;
 
     while (*(pargs->running)) {
-        if (ringbuffer_pop(pargs->input_rb, &audio_data) == 0) {
-            // TODO: Replace with real noise suppression
+        audio_data = ringbuffer_pop(pargs->input_rb);
+        if (audio_data != NULL) {
+            // TODO: Replace with real noise suppression logic
             void *processed_data = audio_data;  // Just passthrough for now
 
             ringbuffer_push(pargs->output_rb, processed_data);
         } else {
-            usleep(1000); // Sleep to avoid busy wait
+            usleep(1000); // Sleep to avoid busy-waiting when buffer is empty
         }
     }
 

@@ -11,7 +11,7 @@ void *capture_thread(void *args) {
     while (*running) {
         int *sample = malloc(sizeof(int));
         *sample = rand() % 100;  // fake audio sample
-        ringbuffer_write(rb, sample);
+        ringbuffer_push(rb, sample);
         printf("[Capture] Sample captured: %d\n", *sample);
         usleep(50000); // simulate 20Hz mic sampling
     }
