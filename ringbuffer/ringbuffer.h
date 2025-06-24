@@ -18,6 +18,8 @@ void ringbuffer_init(RingBuffer *rb, int size);
 void ringbuffer_destroy(RingBuffer *rb);
 void ringbuffer_push(RingBuffer *rb, void *item);
 void *ringbuffer_pop(RingBuffer *rb);
+void ringbuffer_wake_all(RingBuffer *rb);
+
 
 #endif
 

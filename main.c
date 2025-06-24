@@ -10,38 +10,46 @@
 
 #define RINGBUFFER_SIZE 16
 
+// Global running flag and ringbuffers (needed in signal handler)
 int running = 1;
+RingBuffer input_rb, output_rb;
 
+// Wake up threads on Ctrl+C
 void handle_sigint(int sig) {
     (void)sig;
+    printf("\nSIGINT received. Shutting down...\n");
     running = 0;
+
+    // Wake up threads blocked on ringbuffers
+    ringbuffer_wake_all(&input_rb);
+    ringbuffer_wake_all(&output_rb);
 }
 
 int main() {
+    // Register SIGINT handler
     signal(SIGINT, handle_sigint);
 
-    // Step 1: Initialize ring buffers
-    RingBuffer input_rb, output_rb;
+    // Initialize ring buffers
     ringbuffer_init(&input_rb, RINGBUFFER_SIZE);
     ringbuffer_init(&output_rb, RINGBUFFER_SIZE);
 
-    // Step 2: Set up arguments
+    // Set up thread arguments
     CaptureArgs cap_args = { &input_rb, &running };
     ProcessorArgs proc_args = { &input_rb, &output_rb, &running };
     PlaybackArgs play_args = { &output_rb, &running };
 
-    // Step 3: Start threads
+    // Launch threads
     pthread_t cap_tid, proc_tid, play_tid;
     pthread_create(&cap_tid, NULL, capture_thread, &cap_args);
     pthread_create(&proc_tid, NULL, processor_thread, &proc_args);
     pthread_create(&play_tid, NULL, playback_thread, &play_args);
 
-    // Step 4: Wait for threads to finish
+    // Wait for threads to finish
     pthread_join(cap_tid, NULL);
     pthread_join(proc_tid, NULL);
     pthread_join(play_tid, NULL);
 
-    // Step 5: Cleanup
+    // Cleanup
     ringbuffer_destroy(&input_rb);
     ringbuffer_destroy(&output_rb);
 

@@ -1,10 +1,10 @@
 #ifndef PLAYBACK_H
 #define PLAYBACK_H
 
-#include "ringbuffer.h"
+#include "../ringbuffer/ringbuffer.h"
 
 typedef struct {
-    RingBuffer *rb;
+    RingBuffer *input_rb;
     int *running;
 } PlaybackArgs;
 

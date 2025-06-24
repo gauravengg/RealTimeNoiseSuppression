@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -pthread -Iringbuffer -Icapture -Iprocessor -Iplayback
+CFLAGS = -Wall -g -pthread -Iringbuffer -Icapture -Iprocessor -Iplayback -lasound
+LIBS = -lasound   # <-- ADD THIS
 
 SRC = main.c \
       ringbuffer/ringbuffer.c \
@@ -13,7 +14,9 @@ TARGET = app
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)    # <-- Link with ALSA here
+      
+
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

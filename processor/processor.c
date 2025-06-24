@@ -10,14 +10,15 @@ void *processor_thread(void *args) {
     while (*(pargs->running)) {
         audio_data = ringbuffer_pop(pargs->input_rb);
         if (audio_data != NULL) {
-            // TODO: Replace with real noise suppression logic
+            // TODO: Add real noise suppression
             void *processed_data = audio_data;  // Just passthrough for now
 
             ringbuffer_push(pargs->output_rb, processed_data);
         } else {
-            usleep(1000); // Sleep to avoid busy-waiting when buffer is empty
+            usleep(1000); // Avoid busy waiting if nothing to process
         }
     }
 
+    printf("Processor thread exiting.\n");
     return NULL;
 }
