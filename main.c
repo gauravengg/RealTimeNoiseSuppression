@@ -2,13 +2,15 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <pthread.h>
+#include <unistd.h>
+
 
 #include "ringbuffer/ringbuffer.h"
 #include "capture/capture.h"
 #include "processor/processor.h"
 #include "playback/playback.h"
 
-#define RINGBUFFER_SIZE 16
+#define RINGBUFFER_SIZE 64
 
 // Global running flag and ringbuffers (needed in signal handler)
 int running = 1;
@@ -41,6 +43,7 @@ int main() {
     // Launch threads
     pthread_t cap_tid, proc_tid, play_tid;
     pthread_create(&cap_tid, NULL, capture_thread, &cap_args);
+    usleep(500000);
     pthread_create(&proc_tid, NULL, processor_thread, &proc_args);
     pthread_create(&play_tid, NULL, playback_thread, &play_args);
 
