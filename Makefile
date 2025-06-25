@@ -1,12 +1,13 @@
 CC = gcc
-CFLAGS = -Wall -g -pthread -Iringbuffer -Icapture -Iprocessor -Iplayback -lasound
+CFLAGS = -Wall -g -pthread -Iringbuffer -Icapture -Iprocessor -Iplayback -Iwhisper -lasound
 LIBS = -lasound   # <-- ADD THIS
 
 SRC = main.c \
       ringbuffer/ringbuffer.c \
       capture/capture.c \
       processor/processor.c \
-      playback/playback.c
+      playback/playback.c \
+      whisper/whisper_client.c  
 
 OBJ = $(SRC:.c=.o)
 TARGET = app
